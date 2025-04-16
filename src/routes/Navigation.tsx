@@ -1,35 +1,48 @@
-import { BrowserRouter } from "react-router-dom"
-import {Routes,Route,NavLink,Navigate} from "react-router-dom"
+import {BrowserRouter, Routes, Route, NavLink, Navigate} from "react-router-dom"
 import logo from '../logo.svg'
-import { hrtime } from "process"
+import {routes} from './routes'
+import { Suspense } from 'react'
 
 export const Navigation = () => {
-  return (
-   <BrowserRouter>
-    <div className="main-layout">
-        <nav>
-            <img src={logo} alt="React Logo" />
-        <ul>
-            <li>
-            <NavLink to="/home" className={ ({isActive}) => isActive? 'nav-active' : ''}>Home</NavLink>
-            </li>
-            <li>
-            <NavLink to="/about" className={ ({isActive}) => isActive? 'nav-active' : ''}>About</NavLink>
-            </li>
-            <li>
-            <NavLink to="/user" className={ ({isActive}) => isActive? 'nav-active' : ''}>Users</NavLink>
-            </li>
-        </ul>
-        </nav>
+    return (
+        <Suspense fallback={<span>Loading</span>}>
+            <BrowserRouter>
+                    <div className="main-layout">
+                        <nav>
+                            <img src={logo} alt="React Logo" />
+                        <ul>
+                            {
+                                routes.map( route =>(
+                                    <li key={route.to}>
+                                        <NavLink 
+                                            to={ route.to } 
+                                            className={ ({isActive}) => isActive? 'nav-active' : ''}
+                                            >{route.name}
+                                        </NavLink>
+                                    </li>
+                                ))
+                            }
+                        </ul>
+                        </nav>
 
-    <Routes>
-        <Route path="about" element={ <h1>AboutPage</h1> } ></Route>
-        <Route path="users" element={ <h1>UsersPage</h1> } ></Route>
-        <Route path="home" element={ <h1>HomePage</h1> } ></Route>
+                        <Routes>
+                            {
+                                routes.map( route => (
+                                    <Route 
+                                        key={route.to} 
+                                        path={route.path} 
+                                        element={<route.Component/>} >
+                                    </Route>
+                                ))
+                            }
 
-        <Route path="/*" element={<Navigate to="/home" replace/>} ></Route>
-    </Routes>
-    </div>
-   </BrowserRouter>
-)
+                            <Route 
+                                path="/*" 
+                                element={<Navigate to={routes[0].to} replace/>} >
+                            </Route>
+                        </Routes>
+                    </div>
+            </BrowserRouter>
+    </Suspense>
+    )
 }
