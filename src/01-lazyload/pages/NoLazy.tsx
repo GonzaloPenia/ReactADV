@@ -1,5 +1,7 @@
 export const NoLazy = () => {
   return (
-    <div>NoLazy</div>
+    <div>
+      <h1>No lazy</h1>
+    </div>
   )
 }
