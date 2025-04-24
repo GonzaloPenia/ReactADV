@@ -10,6 +10,10 @@ export interface Product {
     title: string;
 }
 
+export interface ProductInCart extends Product{
+  count : number
+}
+
 export interface ProductContextProp{
     counter: number;
     increaseBy: (value:number) => void;
